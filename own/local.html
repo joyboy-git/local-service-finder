@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Local Service Finder</title>
+
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <h2>Local Service Finder</h2>
+
+  <div class="search-bar">
+    <input type="text" id="searchBox" placeholder="Search for a service..." />
+    <button onclick="searchLocation()">Search</button>
+    <button id="findMeBtn">📍 Find Me</button>
+  </div>
+
+  <div id="quickServices" class="quick-options"></div>
+  <div id="map" style="height: 500px; margin-top: 10px;"></div>
+
+  <div id="routeInfo" style="margin-top: 10px; font-size: 16px; font-weight: bold; text-align: center;"></div>
+
+  <footer>
+    <a href="https://forms.gle/CtqLuBBGmwctE5oVA" target="_blank" class="register-link">
+       Register Your Service 
+    </a>
+  </footer>
+
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <!-- Custom JS -->
+  <script src="java.js"></script>
+</body>
+
+</html>

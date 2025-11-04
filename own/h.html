@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Local Service Finder</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin:0; padding:0; background:#f4f4f9; }
+    header { background:#007bff; color:#fff; padding:15px; text-align:center; font-size:20px; }
+    nav { background:#0056b3; display:flex; justify-content:space-around; padding:10px 0; }
+    nav a { color:#fff; text-decoration:none; padding:8px 16px; border-radius:6px; }
+    nav a:hover { background:#003f7f; }
+
+    .container { padding:20px; }
+    .section { display:none; }
+    .active { display:block; }
+
+    .card { background:#fff; padding:15px; margin:10px 0; border-radius:10px; box-shadow:0 2px 5px rgba(0,0,0,0.1); }
+    .card h3 { margin:0; }
+    .btn { background:#007bff; color:#fff; padding:6px 12px; border:none; border-radius:6px; cursor:pointer; }
+    .btn:hover { background:#0056b3; }
+
+    /* Modal */
+    .modal { display:none; position:fixed; z-index:999; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); }
+    .modal-content { background:#fff; margin:10% auto; padding:20px; width:90%; max-width:500px; border-radius:10px; }
+    .close { float:right; font-size:22px; cursor:pointer; }
+
+    /* Dashboard Stats */
+    .stats { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:15px; margin-bottom:20px; }
+    .stat { background:#fff; padding:15px; border-radius:10px; text-align:center; box-shadow:0 2px 5px rgba(0,0,0,0.1); }
+    .stat h2 { margin:0; color:#007bff; }
+  </style>
+</head>
+<body>
+
+<header>Local Service Finder</header>
+
+<nav>
+  <a href="#" onclick="showSection('home')">Home</a>
+  <a href="#" onclick="showSection('browse')">Browse Services</a>
+  <a href="#" onclick="showSection('dashboard')">Dashboard</a>
+  <a href="#" onclick="showSection('requests')">Requests</a>
+</nav>
+
+<div class="container">
+
+  <!-- Home -->
+  <section id="home" class="section active">
+    <h2>Welcome!</h2>
+    <p>Find trusted local professionals for your daily needs — plumbers, electricians, tutors, and more.</p>
+  </section>
+
+  <!-- Browse Services -->
+  <section id="browse" class="section">
+    <h2>Browse Services</h2>
+    <div id="providerList"></div>
+  </section>
+
+  <!-- Dashboard -->
+  <section id="dashboard" class="section">
+    <h2>Dashboard</h2>
+    <div class="stats">
+      <div class="stat"><h2 id="totalRequests">0</h2><p>Total Requests</p></div>
+      <div class="stat"><h2 id="activeRequests">0</h2><p>Active Requests</p></div>
+      <div class="stat"><h2 id="completedRequests">0</h2><p>Completed</p></div>
+    </div>
+  </section>
+
+  <!-- Requests -->
+  <section id="requests" class="section">
+    <h2>My Requests</h2>
+    <div id="requestList"></div>
+  </section>
+</div>
+
+<!-- Request Modal -->
+<div id="requestModal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal('requestModal')">&times;</span>
+    <h3>Request Service</h3>
+    <form id="requestForm">
+      <input type="hidden" id="providerId">
+      <p><b id="providerName"></b></p>
+      <label>Details:</label><br>
+      <textarea id="requestDetails" rows="4" style="width:100%;"></textarea><br><br>
+      <button type="submit" class="btn">Submit Request</button>
+    </form>
+  </div>
+</div>
+
+<script>
+  // Sections switching
+  function showSection(id) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    if (id === 'browse') displayProviders();
+    if (id === 'requests') displayRequests();
+    if (id === 'dashboard') updateDashboard();
+  }
+
+  // Providers data
+  const providers = [
+    { id: 1, name: 'Jane Smith', businessName: 'Smith Plumbing', category: 'Plumber', rating: 4.5, reviews: 23, available: true, location: 'New York, NY', experience: 5, description: 'Professional plumbing services with 5 years of experience. Available 24/7.' },
+    { id: 2, name: 'Mike Johnson', businessName: 'Johnson Electric', category: 'Electrician', rating: 4.8, reviews: 31, available: true, location: 'Brooklyn, NY', experience: 8, description: 'Licensed electrician specializing in residential and commercial work.' },
+    { id: 3, name: 'Sarah Wilson', businessName: 'Sparkle Clean', category: 'Cleaner', rating: 4.6, reviews: 18, available: false, location: 'Queens, NY', experience: 4, description: 'Reliable house cleaning services including deep cleaning.' },
+    { id: 4, name: 'Robert Brown', businessName: 'Brown Carpentry', category: 'Carpenter', rating: 4.3, reviews: 12, available: true, location: 'Bronx, NY', experience: 10, description: 'Custom furniture, repairs, and woodwork with 10 years experience.' },
+    { id: 5, name: 'Emily Davis', businessName: 'PaintPerfect', category: 'Painter', rating: 4.7, reviews: 20, available: true, location: 'Staten Island, NY', experience: 6, description: 'Interior and exterior painting services with professional finish.' },
+    { id: 6, name: 'David Lee', businessName: 'Excel Tutoring', category: 'Tutor', rating: 4.9, reviews: 40, available: true, location: 'Manhattan, NY', experience: 7, description: 'Personalized tutoring in math, science, and coding.' }
+  ];
+
+  let requests = [];
+
+  // Display providers
+  function displayProviders() {
+    const list = document.getElementById('providerList');
+    list.innerHTML = '';
+    providers.forEach(p => {
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.innerHTML = `
+        <h3>${p.businessName} (${p.category})</h3>
+        <p><b>Provider:</b> ${p.name}</p>
+        <p><b>Location:</b> ${p.location}</p>
+        <p><b>Experience:</b> ${p.experience} yrs</p>
+        <p><b>Rating:</b> ⭐ ${p.rating} (${p.reviews} reviews)</p>
+        <p>${p.description}</p>
+        <button class="btn" onclick="openRequestModal(${p.id})" ${p.available ? '' : 'disabled'}>${p.available ? 'Request Service' : 'Unavailable'}</button>
+      `;
+      list.appendChild(card);
+    });
+  }
+
+  // Open & close modal
+  function openRequestModal(id) {
+    const provider = providers.find(p => p.id === id);
+    document.getElementById('providerId').value = id;
+    document.getElementById('providerName').innerText = provider.businessName;
+    document.getElementById('requestDetails').value = '';
+    document.getElementById('requestModal').style.display = 'block';
+  }
+  function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+
+  // Handle request form
+  document.getElementById('requestForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const id = document.getElementById('providerId').value;
+    const details = document.getElementById('requestDetails').value;
+    const provider = providers.find(p => p.id == id);
+    requests.push({ provider: provider.businessName, details, status: 'Active' });
+    closeModal('requestModal');
+    alert('Request submitted successfully!');
+  });
+
+  // Display requests
+  function displayRequests() {
+    const list = document.getElementById('requestList');
+    list.innerHTML = '';
+    if (requests.length === 0) { list.innerHTML = '<p>No requests yet.</p>'; return; }
+    requests.forEach((r, i) => {
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.innerHTML = `
+        <h3>${r.provider}</h3>
+        <p><b>Details:</b> ${r.details}</p>
+        <p><b>Status:</b> ${r.status}</p>
+        ${r.status === 'Active' ? `<button class="btn" onclick="completeRequest(${i})">Mark as Completed</button>` : ''}
+      `;
+      list.appendChild(card);
+    });
+  }
+
+  // Mark request complete
+  function completeRequest(i) {
+    requests[i].status = 'Completed';
+    displayRequests();
+    updateDashboard();
+  }
+
+  // Update dashboard
+  function updateDashboard() {
+    document.getElementById('totalRequests').innerText = requests.length;
+    document.getElementById('activeRequests').innerText = requests.filter(r => r.status === 'Active').length;
+    document.getElementById('completedRequests').innerText = requests.filter(r => r.status === 'Completed').length;
+  }
+</script>
+
+</body>
+</html>

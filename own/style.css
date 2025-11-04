@@ -1,0 +1,72 @@
+body {
+  font-family: 'Poppins', sans-serif;
+  text-align: center;
+  background: #f4f4f9;
+  margin: 0;
+  padding: 0;
+}
+
+h2 {
+  margin-top: 15px;
+  color: #222;
+}
+
+.search-bar {
+  margin-top: 10px;
+}
+
+.search-bar input {
+  padding: 8px;
+  width: 240px;
+  border-radius: 6px;
+  border: 1px solid #aaa;
+}
+
+.search-bar button {
+  padding: 8px 12px;
+  border: none;
+  border-radius: 6px;
+  background-color: #0078ff;
+  color: white;
+  cursor: pointer;
+}
+
+.quick-options {
+  margin: 15px 0;
+}
+
+.quick-options button {
+  margin: 6px;
+  padding: 10px 14px;
+  background: #0d6efd;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.quick-options button:hover {
+  background: #0b5ed7;
+}
+
+footer {
+  margin-top: 20px;
+  background: #222;
+  padding: 15px 0;
+}
+
+footer a.register-link {
+  color: #fff;
+  font-weight: bold;
+  text-decoration: none;
+  font-size: 18px;
+  background: #000000;
+  padding: 10px 16px;
+  border-radius: 10px;
+  transition: 0.3s;
+}
+
+footer a.register-link:hover {
+  background: #ff4500;
+}
