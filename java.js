@@ -17,7 +17,7 @@ var icons = {
   pharmacy: L.icon({ iconUrl: "icons/pharmacy.png", iconSize: [35, 35] }),
   police: L.icon({ iconUrl: "icons/police.png", iconSize: [35, 35] }),
   ambulance: L.icon({ iconUrl: "icons/ambulance.png", iconSize: [35, 35] }),
-  fuel: L.icon({ iconUrl: "icons/fuel.png", iconSize: [35, 35] })
+  fuel: L.icon({ iconUrl: "icons/gas-station.png", iconSize: [35, 35] })
 };
 
 // -------- Example Local Services --------
